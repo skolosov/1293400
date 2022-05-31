@@ -1,5 +1,7 @@
 git clone https://github.com/Laradock/laradock.git
-mv .env.example .env
+cp .env.example .env
 cd laradock
-mv .env.example .env
+cp .env.example .env
 docker-compose up nginx mysql phpmyadmin redis workspace
+docker-compose exec workspace bash
+composer install

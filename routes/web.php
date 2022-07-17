@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\PriceListController;
+use App\Http\Controllers\PriceListPositionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [Controller::class, 'home'])->name('home');
+Route::resource('price-lists', PriceListController::class);
+Route::resource('price-lists/{price_list}/position', PriceListPositionController::class)
+    ->only(['create', 'store', 'edit', 'update', 'destroy']);

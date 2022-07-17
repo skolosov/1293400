@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Currency;
+use App\Exports\PriceListExport;
+use App\Helpers\LogActivity;
 use App\Models\PriceList;
 use App\Services\PriceListPositionService;
 use App\Services\PriceListService;
@@ -11,7 +12,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PriceListPositionController extends Controller
 {
@@ -50,6 +52,7 @@ class PriceListPositionController extends Controller
     public function store(Request $request, int $priceListId): RedirectResponse
     {
         $this->priceListPositionService->storePriceListPosition($request->all(), $priceListId);
+        LogActivity::addToLog('create');
         return redirect()->route('price-lists.show', $priceListId);
     }
 
@@ -77,6 +80,7 @@ class PriceListPositionController extends Controller
     {
         $this->priceListPositionService
             ->updatePriceListPosition($request->all(), $priceListPositionId, $priceListId);
+        LogActivity::addToLog('update');
         return redirect()->route('price-lists.show', $priceListId);
     }
 
@@ -88,6 +92,23 @@ class PriceListPositionController extends Controller
     public function destroy(int $priceListId, int $priceListPositionId): RedirectResponse
     {
         $this->priceListPositionService->destroyPriceListPosition($priceListPositionId);
+        LogActivity::addToLog('delete');
         return redirect()->route('price-lists.show', $priceListId);
+    }
+
+    /**
+     * @param int $priceListId
+     * @return BinaryFileResponse
+     */
+    public function export(int $priceListId): BinaryFileResponse
+    {
+        /** @var PriceList $priceList */
+        $priceList = $this->priceListService->showPriceList($priceListId);
+        $data = [
+            'priceList' => $priceList,
+            'priceListPositions' => $priceList->priceListPositions
+        ];
+
+        return Excel::download(new PriceListExport($data), 'users.xlsx');
     }
 }

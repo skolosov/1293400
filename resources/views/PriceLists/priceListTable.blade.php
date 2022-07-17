@@ -8,6 +8,6 @@
     <th></th>
     </thead>
     <tbody>
-    @include('layouts.priceListRow')
+    @include('PriceLists.priceListRow')
     </tbody>
 </table>

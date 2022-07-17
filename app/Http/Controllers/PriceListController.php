@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Currency;
+use App\Helpers\LogActivity;
 use App\Models\PriceList;
-use App\Services\PriceListPositionService;
 use App\Services\PriceListService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 class PriceListController extends Controller
 {
@@ -35,7 +33,7 @@ class PriceListController extends Controller
     {
         [$priceLists, $duration] = $this->priceListService
             ->getPriceLists($request->get('duration'));
-        return view('welcome',
+        return view('PriceLists.priceListPage',
             ['priceLists' => $priceLists, 'duration' => $duration ?? null]
         );
     }
@@ -49,7 +47,7 @@ class PriceListController extends Controller
             'providers' => $this->priceListService->getProviders(),
             'currencies' => $this->priceListService->getCurrencies(),
         ];
-        return view('layouts.createForm', $data);
+        return view('PriceLists.createForm', $data);
     }
 
     /**
@@ -59,6 +57,7 @@ class PriceListController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $this->priceListService->storePriceList($request->all());
+        LogActivity::addToLog('create');
         return redirect()->route('home');
     }
 
@@ -71,7 +70,7 @@ class PriceListController extends Controller
             'priceListPositions' => $priceList->priceListPositions,
             'priceListId' => $priceList->id
         ];
-        return view('priceLists.priceListShow', $data);
+        return view('PriceLists.priceListShow', $data);
     }
 
     /**
@@ -85,7 +84,7 @@ class PriceListController extends Controller
             'providers' => $this->priceListService->getProviders(),
             'currencies' => $this->priceListService->getCurrencies(),
         ];
-        return view('layouts.updateForm', $data);
+        return view('PriceLists.updateForm', $data);
     }
 
     /**
@@ -96,6 +95,7 @@ class PriceListController extends Controller
     public function update(Request $request, int $id): RedirectResponse
     {
         $this->priceListService->updatePriceList($request->all(), $id);
+        LogActivity::addToLog('update');
         return redirect()->route('home');
     }
 
@@ -106,6 +106,7 @@ class PriceListController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $this->priceListService->destroyPriceList($id);
+        LogActivity::addToLog('delete');
         return redirect()->route('home');
     }
 }

@@ -407,9 +407,18 @@
 <header>
     <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container">
-            <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center">
-                <strong>Megafon</strong>
-            </a>
+            <div class="row">
+                <div class="col">
+                    <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center">
+                        <strong>Megafon</strong>
+                    </a>
+                </div>
+                <div class="col d-flex align-content-end justify-content-end">
+                    <a href="{{ url('/logs') }}" class="navbar-brand d-flex align-items-center">
+                        Logs
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </header>

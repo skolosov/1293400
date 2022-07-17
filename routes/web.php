@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PriceListController;
 use App\Http\Controllers\PriceListPositionController;
@@ -20,3 +21,8 @@ Route::get('/', [Controller::class, 'home'])->name('home');
 Route::resource('price-lists', PriceListController::class);
 Route::resource('price-lists/{price_list}/position', PriceListPositionController::class)
     ->only(['create', 'store', 'edit', 'update', 'destroy']);
+Route::get('price-lists/{price_list}/export', [PriceListPositionController::class, 'export'])
+    ->name('price-lists.export');
+Route::get('/logs', function () {
+    return view('log.logPage', ['logs' => LogActivity::logActivityLists()]);
+});

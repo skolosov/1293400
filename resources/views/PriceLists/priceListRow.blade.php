@@ -14,7 +14,7 @@
         </td>
         <td>
             <div>
-                <form method="POST" action="{{ url("price-lists/$priceList->id") }}">
+                <form method="POST" action="{{ route("price-lists.destroy", $priceList->id) }}">
                     @method('DELETE')
                     @csrf
                     <button type="submit" class="btn btn-sm btn-danger">X</button>

@@ -35,7 +35,8 @@
                                         </a>
                                     </div>
                                     <div class="mb-3">
-                                        <a class="btn btn-sm btn-warning">
+                                        <a href="{{ route('price-lists.export', $priceList->id) }}"
+                                           class="btn btn-sm btn-warning">
                                             <span>
                                                 Сохранить в Excel
                                             </span>
